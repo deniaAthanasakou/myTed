@@ -25,10 +25,31 @@
 				<div class="searchContainer" >
 			        
 			        <br>
-			        <form  class="form-inline md-form mr-auto mb-4" method="POST" action="./Network" accept-charset="UTF-8">
-			             <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-    					 <button class="btn btn-outline-warning btn-rounded btn-sm my-0" type="submit">Search</button>
-			         </form>     
+			         <form role="Form" method="POST" action="../Network" accept-charset="UTF-8" > 
+					  <div class="row">
+					  
+						  <div class="col-xs-3 col-md-3 col-lg-3 col-sm-3"></div> <!-- for alignment purposes -->
+						  
+						    <div class="col-xs-6 col-md-6 col-lg-6 col-sm-6">
+						    
+						    
+						      <div class="input-group">
+						        <input type="text" class="form-control" placeholder="Search" id="search" name="search"/>
+						        <div class="input-group-btn">
+						          <button class="btn btn-primary" type="submit">
+						            <span class="glyphicon glyphicon-search"></span>
+						          </button>
+						        </div>
+						      </div>
+						      
+						      
+						    </div>
+						    
+						   <div class="col-xs-3 col-md-3 col-lg-3 col-sm-3"></div> <!-- for alignment purposes -->
+					    
+					  </div>
+					</form>
+					
 				</div>
 				
 				<div class="myContainer">
@@ -44,7 +65,7 @@
 						   <c:set var="count" value="0"/>
 						</c:if>
 						<c:if test="${count==0}">
-						   <div class="row">
+						   <div class="row myRow">
 						</c:if>
 						
 						<!-- create column -->

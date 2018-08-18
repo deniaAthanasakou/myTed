@@ -2,6 +2,7 @@ package Servlets;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -38,6 +39,9 @@ public class Network extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//response.getWriter().append("Served at: ").append(request.getContextPath());
+		
+		System.out.println("again in get");
+		
 		String displayPage="/jsp_files/network.jsp";
 		String action = request.getParameter("action");
 		request.setAttribute("redirect", "StopLoop");	
@@ -65,6 +69,8 @@ public class Network extends HttpServlet {
 		// TODO Auto-generated method stub
 		//doGet(request, response);
 		
+		System.out.println(" in post");
+		
 		UserDAO dao = new UserDAOImpl(true);
 		String search = request.getParameter("search");
 		String displayPage="/jsp_files/network.jsp";
@@ -72,35 +78,51 @@ public class Network extends HttpServlet {
 		request.setAttribute("redirect", "StopLoop");	
 		
 		if(search==null) {
-			
-			
+
+			//response.sendRedirect(request.getContextPath() + "/jsp_files/network.jsp");
 			RequestDispatcher view = request.getRequestDispatcher(displayPage);
 		    view.forward(request, response);
+			
+			System.out.println("null search");
+			
 		    return;
 		}
 		
 		String[] splitStr = search.trim().split(" ");
 		List<User> users=null;
-		if(splitStr.length<1) {
-			users= null;
-		}
-		else if(splitStr.length<2) {
+		
+		if(splitStr.length==1) {
+			System.out.println("one item");
 			List<User> users1= dao.searchByName(splitStr[0]);
 			List<User> users2= dao.searchBySurname(splitStr[0]);
+			users = new ArrayList<>();
 			users.addAll(users1);
 			users.addAll(users2);
 		}
-		else if(splitStr.length<3) {
+		else if(splitStr.length==2) {
+			
+			System.out.println("two items");
+			
 			List<User> users1= dao.searchByNameAndSurname(splitStr[0], splitStr[1]);
 			List<User> users2= dao.searchByNameAndSurname(splitStr[1], splitStr[0]);
+			users = new ArrayList<>();
 			users.addAll(users1);
 			users.addAll(users2);
 		}
 		
 		request.setAttribute("users", users);	
 		
+		
+		if (users != null) {
+			for (User user: users) {		
+				System.out.println(user.getName() + " " + user.getSurname() + " " + user.getEmail());		
+			}
+		}
+		
 		RequestDispatcher view = request.getRequestDispatcher(displayPage);
 	    view.forward(request, response);
+	    
+	   // response.sendRedirect(request.getContextPath() + "/jsp_files/network.jsp");
 		
 	}
 

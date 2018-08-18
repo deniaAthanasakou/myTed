@@ -3,7 +3,7 @@
 }
 
 
-.row{
+.myRow{
 	height: 200px;
 }
 
@@ -15,7 +15,7 @@
     padding-bottom: 80px;
 }
 
-.row > div{
+.myRow > div{
 	height: 100%;
 }
 
@@ -39,3 +39,11 @@
  td {
     text-align: left;  
 }
+
+.searchContainer{
+	padding-bottom:40px;
+	padding-top:20px;
+	margin: 0 auto;
+	float: none;
+}
+
