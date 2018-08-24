@@ -1,14 +1,11 @@
 package Servlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,8 +16,11 @@ import JavaFiles.VariousFunctions;
 
 import java.util.List;
 
+import database.dao.post.PostDAO;
+import database.dao.post.PostDAOImpl;
 import database.dao.user.UserDAO;
 import database.dao.user.UserDAOImpl;
+import database.entities.Post;
 import database.entities.User;
 
 
@@ -55,14 +55,19 @@ public class LoginUser extends HttpServlet {
 		UserDAO dao = new UserDAOImpl(true);
 		String email = request.getParameter("email");
 		response.setContentType("text/html;charset=UTF-8");
-		PrintWriter out = response.getWriter();
+		//PrintWriter out = response.getWriter();
 		//check email
 		Boolean validMail = VariousFunctions.isValidEmailAddress(email);
 		if(!validMail) {
- 			out.println("<script type=\"text/javascript\">");
+ 			/*out.println("<script type=\"text/javascript\">");
 			out.println("alert('Error! Invalid email address was given as input.');");
 			out.println("window.history.back()");
-			out.println("</script>");
+			out.println("</script>");*/
+			
+			request.setAttribute("loginError", "Invalid email address was given as input.");
+			RequestDispatcher displayPage = getServletContext().getRequestDispatcher("/WelcomePage.jsp");
+			displayPage.forward(request, response);
+			
 			return;
 		}
 		String password = request.getParameter("password");
@@ -70,16 +75,7 @@ public class LoginUser extends HttpServlet {
 		//encrypt password
 		password = AESCrypt.encrypt(password);
 		
-		List<User> ulist = dao.list();
-		User loggedInUser=null;
-		if (ulist != null) {
-			for (User user: ulist) {		
-				if(user.getEmail().equals(email) && user.getPassword().equals(password)) {
-					loggedInUser=user;
-					break;
-				}		
-			}
-		}
+		User loggedInUser = dao.matchUserLogin(email,password);
 		
 		if(loggedInUser!=null) {
 			//create new session
@@ -89,9 +85,14 @@ public class LoginUser extends HttpServlet {
 			session.setAttribute("id",String.valueOf(loggedInUser.getId()));
 			session.setAttribute("name",loggedInUser.getName());
 			session.setAttribute("surname",loggedInUser.getSurname());
-			session.setAttribute("image",AESCrypt.decrypt(loggedInUser.getPhotoURL()));
+			session.setAttribute("image",loggedInUser.getPhotoURL());
 			//go to home
-			response.sendRedirect(request.getContextPath() + "/jsp_files/home.jsp");
+			RequestDispatcher displayPage = getServletContext().getRequestDispatcher("/jsp_files/home.jsp");
+			PostDAO postDAO = new PostDAOImpl(true);
+			List<Post> userPosts = postDAO.findPosts(Long.valueOf(loggedInUser.getId()));
+			//get right posts
+			request.setAttribute("posts",userPosts);
+			displayPage.forward(request, response);
 		}
 		else {
 			request.setAttribute("loginError", "User doesn't exist.");

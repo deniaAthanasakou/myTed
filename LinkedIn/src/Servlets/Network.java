@@ -1,7 +1,6 @@
 package Servlets;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,24 +37,27 @@ public class Network extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		//response.getWriter().append("Served at: ").append(request.getContextPath());
 		
+		//show connnections
 		System.out.println("again in get");
 		
 		String displayPage="/jsp_files/network.jsp";
-		String action = request.getParameter("action");
 		request.setAttribute("redirect", "StopLoop");	
 		
-		if (action.equalsIgnoreCase("getUsers")){
 			
-			UserDAO dao = new UserDAOImpl(true);
-			request.setAttribute("users", dao.list());	
-            
-        } else {
-        	System.out.println("Error in network.");
-        	
-        } 
+		UserDAO dao = new UserDAOImpl(true);
+		int user_id=Integer.valueOf((String) request.getSession().getAttribute("id"));
+		List<User> ulist = dao.getConnections(user_id);
+		System.out.println("id is "+ user_id);
+		request.setAttribute("users", ulist);
 		
+		if(ulist==null || ulist.size()==0) {
+			request.setAttribute("getUsers", "noFriends");
+		}
+		else {
+			request.setAttribute("getUsers", "friends");
+		}
+        
 		 RequestDispatcher view = request.getRequestDispatcher(displayPage);
 	     view.forward(request, response);
 		
@@ -67,22 +69,42 @@ public class Network extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		//doGet(request, response);
+		//show search results
 		
 		System.out.println(" in post");
-		
 		UserDAO dao = new UserDAOImpl(true);
+		
+		if (request.getParameter("connect") != null) {
+			int user_id1=Integer.valueOf((String) request.getSession().getAttribute("id"));
+			int user_id2=Integer.valueOf(request.getParameter("userId"));
+			dao.connectToUser(user_id1, user_id2);
+            
+			request.setAttribute("connectionCompleted", "done");
+            doGet(request, response);
+            return;
+		}
+		
+		
+		
 		String search = request.getParameter("search");
 		String displayPage="/jsp_files/network.jsp";
 		
 		request.setAttribute("redirect", "StopLoop");	
+		System.out.println(search+"!");
 		
-		if(search==null) {
+		
+		VariousFunctions vf = new VariousFunctions();   
+		
+		if(vf.isBlank(search)) {
 
-			//response.sendRedirect(request.getContextPath() + "/jsp_files/network.jsp");
+			request.setAttribute("getUsers", "usersFromSearch");
+			request.setAttribute("users", dao.listWithConnectedField(Integer.valueOf((String) request.getSession().getAttribute("id"))));	
+			
 			RequestDispatcher view = request.getRequestDispatcher(displayPage);
 		    view.forward(request, response);
 			
+		    
+		    
 			System.out.println("null search");
 			
 		    return;
@@ -119,11 +141,14 @@ public class Network extends HttpServlet {
 			}
 		}
 		
+		if(users==null || users.size()==0)
+			request.setAttribute("getUsers", "noUsersFromSearch");
+		else
+			request.setAttribute("getUsers", "usersFromSearch");
+		
 		RequestDispatcher view = request.getRequestDispatcher(displayPage);
 	    view.forward(request, response);
-	    
-	   // response.sendRedirect(request.getContextPath() + "/jsp_files/network.jsp");
-		
+	    		
 	}
 
 }

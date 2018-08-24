@@ -16,12 +16,10 @@ import database.entities.User;
 public class PostDAOImpl implements PostDAO 
 {
 	//prepared Statements
-	private static final String SQL_FIND_BY_ID = "SELECT id, text, date_posted, path_files, hasAudio, hasImages, hasVideos, user_id FROM Post WHERE id = ?";
-	private static final String SQL_FIND_BY_USER_ID = "SELECT id, text, date_posted, path_files, hasAudio, hasImages, hasVideos, user_id FROM Post WHERE user_id = ?";
-	private static final String SQL_LIST_ORDER_BY_DATE = "SELECT id, text, date_posted, path_files, hasAudio, hasImages, hasVideos, user_id FROM Post ORDER BY date_posted";
-
-	private static final String SQL_INSERT = "INSERT INTO Post (text, date_posted, path_files, hasAudio, hasImages, hasVideos, user_id) VALUES  (?, ?, ?, ?, ?, ?, ?)";
+	private static final String SQL_LIST = "SELECT id, text, date_posted, path_files, hasAudio, hasImages, hasVideos, likes, user_id FROM Post";
+	private static final String SQL_INSERT = "INSERT INTO Post (text, date_posted, path_files, hasAudio, hasImages, hasVideos, likes, user_id) VALUES  (?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String SQL_COUNT = "SELECT COUNT(*) FROM Post";
+	private static final String SQL_FIND_POSTS = "SELECT id,text, date_posted, path_files, hasAudio, hasImages, hasVideos, likes FROM Post WHERE user_id = ? ORDER BY date_posted";
 
     
     private ConnectionFactory factory;
@@ -37,7 +35,7 @@ public class PostDAOImpl implements PostDAO
 
         try (
             Connection connection = factory.getConnection();
-            PreparedStatement statement = connection.prepareStatement(SQL_LIST_ORDER_BY_DATE);
+            PreparedStatement statement = connection.prepareStatement(SQL_LIST);
             ResultSet resultSet = statement.executeQuery();
         ) {
             while (resultSet.next()) {
@@ -57,7 +55,7 @@ public class PostDAOImpl implements PostDAO
 		int ret = -1;
 		//get values from user entity
 		int isAdmin=0;
-		Object[] values = { post.getText(), DAOUtil.toSqlTimestamp(post.getDatePosted()), post.getPathFiles(), post.getHasAudio(), post.getHasImages(), post.getHasVideos(), post.getUser().getId()};
+		Object[] values = { post.getText(), DAOUtil.toSqlTimestamp(post.getDatePosted()), post.getPathFiles(), post.getHasAudio(), post.getHasImages(), post.getHasVideos(), post.getLikes(), post.getUser().getId()};
 
 		//connect to DB
 		try (Connection connection = factory.getConnection();
@@ -114,6 +112,26 @@ public class PostDAOImpl implements PostDAO
         return size;
 	}
 	
+	@Override
+	public List<Post> findPosts(Long id) {
+		List<Post> posts = new ArrayList<>();
+
+        try (
+            Connection connection = factory.getConnection();
+        		PreparedStatement statement = DAOUtil.prepareStatement(connection, SQL_FIND_POSTS, false, id);
+            ResultSet resultSet = statement.executeQuery();
+        ) {
+            while (resultSet.next()) {
+                posts.add(map(resultSet));
+            }
+        } 
+        catch (SQLException e) {
+        	System.err.println(e.getMessage());
+        }
+
+        return posts;
+	}
+	
 	private static Post map(ResultSet resultSet) throws SQLException {
         Post post = new Post();
         post.setId(resultSet.getInt("id"));
@@ -123,7 +141,7 @@ public class PostDAOImpl implements PostDAO
         post.setHasAudio(resultSet.getByte("hasAudio"));
         post.setHasImages(resultSet.getByte("hasImages"));
         post.setHasVideos(resultSet.getByte("hasVideos"));
-        post.setUser((User) resultSet.getObject("user_id"));
+        post.setLikes(resultSet.getInt("likes"));
 	    return post;
 	}
 }

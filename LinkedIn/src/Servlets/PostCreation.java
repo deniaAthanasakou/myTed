@@ -185,9 +185,11 @@ public class PostCreation extends HttpServlet {
 			UserDAO userDao = new UserDAOImpl(true);
 			User user = userDao.find(Long.valueOf((String) request.getSession().getAttribute("id")));
 			
-			Post newPost = new Post(text,dNow,pathFiles,hasAudio, hasImages, hasVideo, user);
+			Post newPost = new Post(text,dNow,pathFiles,hasAudio, hasImages, hasVideo, 0, user);
 			dao.create(newPost);
 			
+			//update user's posts
+			//user.addPost(newPost);
 			//go home
 			response.sendRedirect(request.getContextPath() + "/jsp_files/home.jsp");
 		}

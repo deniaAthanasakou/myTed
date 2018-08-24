@@ -18,5 +18,13 @@ public interface UserDAO
     public List<User> searchBySurname(String surname);
     
     public List<User> searchByNameAndSurname(String name, String surname);
-
+        
+    public User matchUserLogin(String email,String password);
+    
+    public List<User> getConnections(int user_id);
+    
+    public List<User> listWithConnectedField(int user_id);
+    
+    public int connectToUser(int user_id1, int user_id2);
+    
 }
