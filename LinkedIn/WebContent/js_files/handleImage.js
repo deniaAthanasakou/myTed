@@ -5,7 +5,7 @@ function readURL(input) {
         reader.onload = function (e) {
             $('#uploadedImage')
                 .attr('src', e.target.result)
-                .width(150)
+                .width(200)
                 .height(200);
         };
         reader.readAsDataURL(input.files[0]);

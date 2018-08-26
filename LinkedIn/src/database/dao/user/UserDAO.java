@@ -5,7 +5,7 @@ import database.entities.User;
 
 public interface UserDAO 
 {
-	public User find(Long id);
+	public User find(int id);
 
     public List<User> list();
 
@@ -26,5 +26,7 @@ public interface UserDAO
     public List<User> listWithConnectedField(int user_id);
     
     public int connectToUser(int user_id1, int user_id2);
+    
+    public int updateSettings(int user_id, String email, String password);
     
 }

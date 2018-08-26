@@ -3,6 +3,7 @@ package database.entities;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -33,6 +34,10 @@ public class Post implements Serializable {
 	private String pathFiles;
 
 	private String text;
+
+	//bi-directional many-to-one association to Comment
+	@OneToMany(mappedBy="post")
+	private List<Comment> comments;
 
 	//bi-directional many-to-one association to User
 	@ManyToOne
@@ -115,6 +120,28 @@ public class Post implements Serializable {
 
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	public List<Comment> getComments() {
+		return this.comments;
+	}
+
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+
+	public Comment addComment(Comment comment) {
+		getComments().add(comment);
+		comment.setPost(this);
+
+		return comment;
+	}
+
+	public Comment removeComment(Comment comment) {
+		getComments().remove(comment);
+		comment.setPost(null);
+
+		return comment;
 	}
 
 	public User getUser() {

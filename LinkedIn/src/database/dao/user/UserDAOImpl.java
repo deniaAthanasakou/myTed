@@ -19,18 +19,22 @@ public class UserDAOImpl implements UserDAO
 	private static final String SQL_FIND_BY_ID = "SELECT id, isAdmin, email, password, name, surname, tel, photoURL, dateOfBirth, gender, city, country, hasImage, isConnected FROM User WHERE id = ?";
 	private static final String SQL_FIND_BY_EMAIL_PASSWORD = "SELECT id, isAdmin, email, password, name, surname, tel, photoURL, dateOfBirth, gender, city, country, hasImage, isConnected FROM User WHERE email = ? AND password = ?";
 	private static final String SQL_LIST_ORDER_BY_ID = "SELECT id, isAdmin, email, password, name, surname, tel, photoURL, dateOfBirth, gender, city, country, hasImage, isConnected FROM User ORDER BY id";
+	private static final String SQL_LIST_ORDER_BY_NAME = "SELECT id, isAdmin, email, password, name, surname, tel, photoURL, dateOfBirth, gender, city, country, hasImage, isConnected FROM User ORDER BY name, surname";
+
 	private static final String SQL_LIST_ORDER_BY_EMAIL = "SELECT id, isAdmin, email, password, name, surname, tel, photoURL, dateOfBirth, gender, city, country, hasImage, isConnected FROM User ORDER BY email";
 	private static final String SQL_INSERT = "INSERT INTO User (isAdmin, email, password, name, surname, tel, photoURL, dateOfBirth, gender, city, country, hasImage) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 	private static final String SQL_COUNT = "SELECT COUNT(*) FROM User";
 	private static final String SQL_FIND_BY_NAME = "SELECT id, isAdmin, email, password, name, surname, tel, photoURL, dateOfBirth, gender, city, country, hasImage, isConnected FROM User WHERE name = ?";
 	private static final String SQL_FIND_BY_SURNAME = "SELECT id, isAdmin, email, password, name, surname, tel, photoURL, dateOfBirth, gender, city, country, hasImage, isConnected FROM User WHERE surname = ?";
 	private static final String SQL_FIND_BY_NAME_AND_SURNAME = "SELECT id, isAdmin, email, password, name, surname, tel, photoURL, dateOfBirth, gender, city, country, hasImage, isConnected FROM User WHERE name = ? AND surname = ?";
-	private static final String SQL_GET_CONNECTIONS_OF_USER = "SELECT id, isAdmin, email, password, name, surname, tel, photoURL, dateOfBirth, gender, city, country, hasImage, isConnected FROM connection, User WHERE user_id = ? AND connectedUser_id = User.id";
+	private static final String SQL_GET_CONNECTIONS_OF_USER = "SELECT id, isAdmin, email, password, name, surname, tel, photoURL, dateOfBirth, gender, city, country, hasImage, isConnected FROM connection, User WHERE user_id = ? AND connectedUser_id = User.id ORDER BY name, surname";
 	private static final String SQL_GET_USERS_EXCEPT_ONE = "SELECT id, isAdmin, email, password, name, surname, tel, photoURL, dateOfBirth, gender, city, country, hasImage, isConnected FROM User WHERE id != ?";
 	
 	private static final String SQL_UPDATE_USERS_CONNECTED_FIELD = "UPDATE User, connection SET isConnected='1' WHERE connection.user_id=? AND user.id=connection.connectedUser_id";
 	private static final String SQL_UPDATE_USERS_DEFAULT_CONNECTED_FIELD = "UPDATE User SET isConnected='0'";
 	private static final String SQL_INSERT_INTO_CONNECTION = "INSERT INTO connection (user_id, connectedUser_id) VALUES (?, ?)";
+	
+	private static final String SQL_UPDATE_EMAIL_PASSWORD = "UPDATE User SET email = ?, password = ? WHERE id = ?";
 
 	
 	
@@ -43,7 +47,7 @@ public class UserDAOImpl implements UserDAO
     }
 
 	@Override
-	public User find(Long id) {
+	public User find(int id) {
 		User user = null;
 		
 		try (
@@ -268,7 +272,7 @@ public class UserDAOImpl implements UserDAO
 			
 			statement.executeUpdate();		//isConnected=1
 			
-        	PreparedStatement statement2 = DAOUtil.prepareStatement(connection, SQL_LIST_ORDER_BY_ID, false);
+        	PreparedStatement statement2 = DAOUtil.prepareStatement(connection, SQL_LIST_ORDER_BY_NAME, false);
             ResultSet resultSet = statement2.executeQuery();	
             while (resultSet.next()) {
             	users.add(map(resultSet));
@@ -307,6 +311,30 @@ public class UserDAOImpl implements UserDAO
 		return ret;
 		
 		
+	}
+	
+	@Override
+	public int updateSettings(int user_id, String email, String password) {
+		int affectedRows=0;
+		try (Connection	connection = factory.getConnection();
+			PreparedStatement statement = DAOUtil.prepareStatement(connection, SQL_UPDATE_EMAIL_PASSWORD, false, email, password, user_id);)
+		
+		{
+	 		affectedRows = statement.executeUpdate();
+			if (affectedRows == 0) {
+				System.err.println("Updating user failed, no rows affected.");
+				return affectedRows;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			System.err.println("SQLException: Updating user failed.");
+			e.printStackTrace();
+			return affectedRows;
+		}
+		
+		return affectedRows;
+ 		
 	}
 	
 	

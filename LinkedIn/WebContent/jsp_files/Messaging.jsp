@@ -7,8 +7,6 @@
 	<head>
 		<meta charset="utf-8">
 			<!-- custom -->
-			<!--<link rel="stylesheet" href="../css_files/main_css.css" type="text/css">
-			<link rel="stylesheet" href="../css_files/user_network.css" type="text/css">-->
 			
 			<link rel="stylesheet" href="${pageContext.request.contextPath}/css_files/messaging.css" type="text/css">
 			<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css" type="text/css" rel="stylesheet">
@@ -19,6 +17,10 @@
 	<body>
 	
 		<jsp:include page="Header.jsp" /> 
+		
+		<% if ( request.getAttribute( "redirect" ) == null ) { %>
+			<jsp:forward page="/Messaging?action=getMessages" />
+		<% } %>
 		
 		<div class="main">
 			<div class="container">
@@ -41,7 +43,7 @@
 						            </div>
 						          </div>
 				            	<br>
-				                <p>Person: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</p>
+				                <p class="lastMsg" >Person: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</p>
 				                
 				            </li>
 				            <li class="list-group-item">
@@ -57,7 +59,7 @@
 						            </div>
 						          </div>
 						        <br>
-				                <p>Person: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</p>
+				                <p class="lastMsg">Person: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</p>
 				                
 				            </li>
 				            <li class="list-group-item">
@@ -73,7 +75,7 @@
 						            </div>
 						          </div>
 						        <br>
-				                <p>Person: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</p>
+				                <p class="lastMsg">Person: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</p>
 				                
 				            </li> 
 				            
@@ -90,7 +92,7 @@
 						            </div>
 						          </div>
 						        <br>
-				                <p>Person: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</p>
+				                <p class="lastMsg">Person: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod</p>
 				                
 				            </li>
 				          </ul>
@@ -102,25 +104,30 @@
 				          <div class="row chatbody">
 				    
 				            <ul class="messageList col-xs-12 col-sm-12 col-md-12 col-lg-12">
-								 <li class="him messageListItem">By Other User</li>
-								 <li class="me messageListItem">By this User, first message</li>
-								 <li class="me messageListItem">By this User, second message</li>
-								 <li class="me messageListItem">By this User, third message</li>
-								 <li class="me messageListItem">By this User, fourth message</li>
-								 <li class="him messageListItem">By Other User, second message</li>
-								 <li class="him messageListItem">By Other User, third message</li>
-								 <li class="him messageListItem">By Other User, fourth message</li>
+								 
+								 <c:forEach items="${messages}" var="message">
+								 	<c:choose>
+								 		<c:when test="${message.from_user==sessionScope.id}">
+							    			<li class="me messageListItem"><c:out value="${message.text}"/></li>
+							    		</c:when>
+							    		<c:otherwise>
+							    			<li class="him messageListItem"><c:out value="${message.text}"/></li>
+							    		</c:otherwise>
+							    	</c:choose>
+								 </c:forEach>
 							</ul>
 				    
 				          </div>
 				
 				          <div class="row send">
-				            <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
-				              <input type="text" placeholder="Message..." class="form-control" />
-				            </div>
-				            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
-				              <button class="btn btn-info btn-block">Send</button>
-				            </div>
+				          	<form action="${pageContext.request.contextPath}/Messaging" method="POST">
+					            <div class="col-xs-9 col-sm-9 col-md-9 col-lg-9">
+					              <input type="text" placeholder="Message..." class="form-control" />
+					            </div>
+					            <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+					              <button class="btn btn-info btn-block">Send</button>
+					            </div>
+				            </form>
 				          </div>
 				
 				        </div>

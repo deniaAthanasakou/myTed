@@ -48,13 +48,11 @@ public class RegisterUser extends HttpServlet {
          uploader.setHeaderEncoding("UTF-8");
      }
 
-       
     /**
      * @see HttpServlet#HttpServlet()
      */
     public RegisterUser() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -71,7 +69,6 @@ public class RegisterUser extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		UserDAO dao = new UserDAOImpl(true);
-		
 		FileItem imageItem = null;
 		Hashtable<String, String> fields = new Hashtable<String, String>();
 		
@@ -174,7 +171,7 @@ public class RegisterUser extends HttpServlet {
 			File idFolder = new File(request.getServletContext().getAttribute("FILES_DIR_USERS") + File.separator + nextUser);
 	    	if(!idFolder.exists()) idFolder.mkdirs();
 	    	//save image
-			if(!imageItem.getName().equals("") && imageItem.getName() != null) {
+			if(imageItem!= null && imageItem.getName() != null && !imageItem.getName().equals("") ) {
 				String fileName = imageItem.getName();
 				if (fileName != null) {
 					fileName = FilenameUtils.getName(fileName);
