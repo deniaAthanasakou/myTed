@@ -132,6 +132,25 @@ public class RegisterUser extends HttpServlet {
 			return;
 		}
 		
+		
+		VariousFunctions vf = new VariousFunctions();   
+		if(vf.isBlank(name)) {
+			out.println("<script type=\"text/javascript\">");
+			out.println("alert('Error! Invalid name was given as input.');");
+			out.println("window.history.back()");
+			out.println("</script>");
+			return;
+			
+		}
+		if(vf.isBlank(surname)) {
+			out.println("<script type=\"text/javascript\">");
+			out.println("alert('Error! Invalid surname was given as input.');");
+			out.println("window.history.back()");
+			out.println("</script>");
+			return;
+		}
+		
+		
 		//check phone number
 		if(telephone!=null) {	
 			telephone=telephone.replaceAll("[\\D]","");
@@ -189,24 +208,32 @@ public class RegisterUser extends HttpServlet {
 				hasImage = 0;
 			}
 			
-			byte isAdmin=0;
+			byte zeroByte=0;
 			//encrypt password
 			password = AESCrypt.encrypt(password);
-			User newUser = new User(null, null, null, email, 0, isAdmin, name, password, photoURL, surname, telephone,hasImage,null);
+			User newUser = new User(null, null, null, email, 0, zeroByte, name, password, photoURL, surname, telephone,hasImage,null, null, null, null,null,null, zeroByte,zeroByte,zeroByte,zeroByte,zeroByte,zeroByte,zeroByte,zeroByte,zeroByte,zeroByte,zeroByte);
 
+			int creation = dao.create(newUser);
 			
-			dao.create(newUser);
-			
-			//create new session
-			request.getSession(true);
-			HttpSession session = request.getSession();
-			//set values
-			session.setAttribute("id",String.valueOf(newUser.getId()));
-			session.setAttribute("name",newUser.getName());
-			session.setAttribute("surname",newUser.getSurname());
-			session.setAttribute("image",newUser.getPhotoURL());
-			//go to home
-			response.sendRedirect(request.getContextPath() + "/jsp_files/home.jsp");
+			if(creation==-1) {
+				out.println("<script type=\"text/javascript\">");
+				out.println("alert('Oops! Something went wrong.');");
+				out.println("window.history.back()");
+				out.println("</script>");
+				return;
+			}else {
+				//create new session
+				request.getSession(true);
+				HttpSession session = request.getSession();
+				//set values
+				session.setAttribute("id",String.valueOf(newUser.getId()));
+				session.setAttribute("email",String.valueOf(newUser.getEmail()));
+				session.setAttribute("name",newUser.getName());
+				session.setAttribute("surname",newUser.getSurname());
+				session.setAttribute("image",newUser.getPhotoURL());
+				//go to home
+				response.sendRedirect(request.getContextPath() + "/jsp_files/home.jsp");
+			}
 		}
 	}
 

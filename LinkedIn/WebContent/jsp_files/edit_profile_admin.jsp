@@ -12,6 +12,7 @@
 		<script src="${pageContext.request.contextPath}/bootstrap-formhelpers/bootstrap-formhelpers.min.js"></script>				
 
 		<script src="${pageContext.request.contextPath}/js_files/handleImage.js"></script>
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/css_files/admin_page.css" type="text/css">
 
 		<title>Edit Profile</title>
 		
@@ -25,7 +26,7 @@
 		
 		<div class="main">
 			<div class="container">	
-				<form role="Form" method="POST" action="${pageContext.request.contextPath}/EditProfile" accept-charset="UTF-8" enctype="multipart/form-data">
+				<form role="Form" method="POST" action="${pageContext.request.contextPath}/EditProfile?fromAdmin=${user.id}" accept-charset="UTF-8" enctype="multipart/form-data">
 					
 					<% if ( request.getAttribute( "editError" ) != null ) { %>
 						<div class="alert alert-danger">
@@ -357,7 +358,7 @@
 					
 					 <div class="form-group row buttons">
 							<div class="col-xs-4 col-md-4 col-lg-4 col-sm-4">
-							 	<input type="reset" class="btn cancel" value="Cancel" onclick="window.location.href='${pageContext.request.contextPath}/EditProfile';">
+							 	<input type="reset" class="btn cancel" value="Go to Admin Page" onclick="window.location.href='${pageContext.request.contextPath}/jsp_files/admin_page.jsp';">
 							</div>
 							
 							<div class="col-xs-4 col-md-4 col-lg-4 col-sm-4"></div>

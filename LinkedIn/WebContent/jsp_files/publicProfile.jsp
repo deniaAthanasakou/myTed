@@ -6,27 +6,52 @@
 		<meta charset="utf-8">
 		<!-- custom -->
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/css_files/profile.css" type="text/css">
-		<link rel="stylesheet" href="${pageContext.request.contextPath}/css_files/profileNavBar.css" type="text/css">
+		<link rel="stylesheet" href="${pageContext.request.contextPath}/css_files/networkNavBar.css" type="text/css">
 			
 		<link href="${pageContext.request.contextPath}/bootstrap-formhelpers/bootstrap-formhelpers.min.css" rel="stylesheet" />
 		<script src="${pageContext.request.contextPath}/bootstrap-formhelpers/bootstrap-formhelpers.min.js"></script>				
 
 		<script src="${pageContext.request.contextPath}/js_files/handleImage.js"></script>
+		
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-		<title>Profile</title>
+		<title>User's profile</title>
 		
 		
 	</head>
 	<body>
-	
-		<% if ( request.getAttribute( "redirect" ) == null) { %>
-			<jsp:forward page="/Profile?action=getUser" />
+
+		<c:set var="user_id" value="${param.id}" />
+		<% if ( request.getAttribute( "redirect" ) == null || request.getAttribute( "redirect" ).equals("null")) { %>
+			<jsp:forward page="/PublicProfile">
+				<jsp:param name="id" value="${user_id}" ></jsp:param>
+			</jsp:forward>
 		<% } %>
 	
 		<jsp:include page="Header.jsp" /> 
 		
 		<div class="main">
-			<div class="container">	
+			<div class="container">					
+				<div class="chat">
+					<form action="${pageContext.request.contextPath}/PrivateProfile" method="POST">
+						<input type="hidden" name="id" value="${user.id}">
+						<input type="hidden" name="pending" value="${user.isPending}">
+					    <input type="submit" name="rejectButton" value="Διαγραφή αιτήματος" class="btn btn-primary deleteFriend btn-lg reject-button"/>
+					</form>
+					<button onclick="location.href='${pageContext.request.contextPath}/jsp_files/Messaging.jsp?id=${user_id}'" type="button" class="btn btn-primary btn-lg chat-button">Συζήτηση</button>
+				</div>
+				
+				<%if (request.getAttribute("msg") != null){%>
+					<div class="alert alert-success">
+						<%=request.getAttribute("msg")%>
+					</div>
+				<%} %>
+				
+				<div class="networkDiv">
+					<a href="${pageContext.request.contextPath}/jsp_files/publicNetwork.jsp?id=${user_id}">Δίκτυο<i class="material-icons">people</i></a>
+				</div>
+	
+							
 					<table class="table">
 						<tbody>
 					    	<tr>
@@ -90,9 +115,11 @@
 						    </tr>
 					    </tbody>
 					 </table>
+					
+					 
 					 
 					 <div class="info">
-						 <div class="row">
+					 	<div class="row">
 							 <div class="col-xs-12 col-md-12 col-lg-12 col-sm-12">
 							  <label>Επαγγελματική θέση:</label>
 							  <c:choose>
@@ -100,7 +127,7 @@
 					    		<c:otherwise><p><c:out value="${user.workPos}"/></p></c:otherwise>
 					    	 </c:choose>
 							</div>
-						 </div>
+						</div>
 						 <div class="row">
 							 <div class="col-xs-12 col-md-12 col-lg-12 col-sm-12">
 							  <label>Φορέας απασχόλησης:</label>
@@ -139,76 +166,7 @@
 						 </div>
 						
 					</div>
-		
 					
-					<div class="choosePrivate">
-						<label>Δημόσιες (<span class="glyphicon glyphicon-ok"></span>) και ιδιωτικές (<span class="glyphicon glyphicon-remove"></span>) πληροφορίες:</label>
-						<br><br>
-						<span class="glyphicon glyphicon-ok"></span> Ονοματεπώνυμο</p>
-						<c:choose>
-				    		<c:when test="${user.privateEmail==1}"><p><span class="glyphicon glyphicon-remove"></span> Ηλεκτρονική διέυθυνση/Email</p></c:when>
-				    		<c:otherwise><p><span class="glyphicon glyphicon-ok"></span> Ηλεκτρονική διέυθυνση/Email</p></c:otherwise>
-				    	</c:choose>
-				    	
-				    	<c:choose>
-				    		<c:when test="${user.privateTelephone==1}"><p><span class="glyphicon glyphicon-remove"></span> Τηλέφωνο</p></c:when>
-				    		<c:otherwise><p><span class="glyphicon glyphicon-ok"></span> Τηλέφωνο</p></c:otherwise>
-				    	</c:choose>
-				    	
-				    	<c:choose>
-				    		<c:when test="${user.privateDateOfBirth==1}"><p><span class="glyphicon glyphicon-remove"></span> Ημερομηνία γέννησης</p></c:when>
-				    		<c:otherwise><p><span class="glyphicon glyphicon-ok"></span> Ημερομηνία γέννησης</p></c:otherwise>
-				    	</c:choose>
-				    	
-				    	<c:choose>
-				    		<c:when test="${user.privateGender==1}"><p><span class="glyphicon glyphicon-remove"></span> Φύλο</p></c:when>
-				    		<c:otherwise><p><span class="glyphicon glyphicon-ok"></span> Φύλο</p></c:otherwise>
-				    	</c:choose>
-				    	
-				    	<c:choose>
-				    		<c:when test="${user.privateCountry==1}"><p><span class="glyphicon glyphicon-remove"></span> Χώρα κατοικίας</p></c:when>
-				    		<c:otherwise><p><span class="glyphicon glyphicon-ok"></span> Χώρα κατοικίας</p></c:otherwise>
-				    	</c:choose>
-				    	
-				    	<c:choose>
-				    		<c:when test="${user.privateCity==1}"><p><span class="glyphicon glyphicon-remove"></span> Πόλη/Περιοχή κατοικίας</p></c:when>
-				    		<c:otherwise><p><span class="glyphicon glyphicon-ok"></span> Πόλη/Περιοχή κατοικίας</p></c:otherwise>
-				    	</c:choose>
-				    	
-				    	<c:choose>
-				    		<c:when test="${user.privateWorkPos==1}"><p><span class="glyphicon glyphicon-remove"></span> Επαγγελματική Θέση</p></c:when>
-				    		<c:otherwise><p><span class="glyphicon glyphicon-ok"></span> Επαγγελματική Θέση</p></c:otherwise>
-				    	</c:choose>
-				    	
-				    	<c:choose>
-				    		<c:when test="${user.privateInstitution==1}"><p><span class="glyphicon glyphicon-remove"></span> Φορέας απασχόλησης</p></c:when>
-				    		<c:otherwise><p><span class="glyphicon glyphicon-ok"></span> Φορέας απασχόλησης</p></c:otherwise>
-				    	</c:choose>
-				    	
-				    	<c:choose>
-				    		<c:when test="${user.privateProfExp==1}"><p><span class="glyphicon glyphicon-remove"></span> Επαγγελματική Εμπειρία</p></c:when>
-				    		<c:otherwise><p><span class="glyphicon glyphicon-ok"></span> Επαγγελματική Εμπειρία</p></c:otherwise>
-				    	</c:choose>
-				    	
-				    	<c:choose>
-				    		<c:when test="${user.privateEducation==1}"><p><span class="glyphicon glyphicon-remove"></span> Εκπαίδευση</p></c:when>
-				    		<c:otherwise><p><span class="glyphicon glyphicon-ok"></span> Εκπαίδευση</p></c:otherwise>
-				    	</c:choose>
-				    	
-				    	<c:choose>
-				    		<c:when test="${user.privateSkills==1}"><p><span class="glyphicon glyphicon-remove"></span> Δεξιότητες</p></c:when>
-				    		<c:otherwise><p><span class="glyphicon glyphicon-ok"></span> Δεξιότητες</p></c:otherwise>
-				    	</c:choose>
-
-					</div>
-					
-					<form role="Form" method="POST" action="${pageContext.request.contextPath}/Profile" accept-charset="UTF-8">
-						<div class="editDiv row">
-							<div class="col-xs-12 col-md-12 col-lg-12 col-sm-12 ">
-						 		<button type="submit" class="btn btn-primary editButton">Επεξεργασία</button>
-						 	</div>
-						</div>
-					</form>
 				
 			</div>
 		</div>		

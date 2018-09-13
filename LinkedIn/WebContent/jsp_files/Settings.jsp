@@ -34,8 +34,8 @@
 							</div>
 						<%}
 						if (request.getAttribute("correctUpdate") != null){%>
-							<div class="alert ">
-								Your email and password have been updated correctly!
+							<div class="alert alert-success">
+								Your email and password have been updated!
 							</div>
 						<%} %>
 					

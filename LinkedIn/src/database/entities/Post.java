@@ -43,6 +43,10 @@ public class Post implements Serializable {
 	@ManyToOne
 	private User user;
 
+	//bi-directional many-to-many association to User
+	@ManyToMany(mappedBy="posts2")
+	private List<User> users;
+
 	public Post() {
 	}
 	
@@ -151,5 +155,91 @@ public class Post implements Serializable {
 	public void setUser(User user) {
 		this.user = user;
 	}
+
+	public List<User> getUsers() {
+		return this.users;
+	}
+
+	public void setUsers(List<User> users) {
+		this.users = users;
+	}
+	
+	//local fields for populate
+		@Transient
+		private int noComments;
+
+		public int getNoComments() {
+			return noComments;
+		}
+
+		public void setNoComments(int noComments) {
+			this.noComments = noComments;
+		}
+		
+		@Transient
+		private String dateInterval;
+
+		public String getDateInterval() {
+			return dateInterval;
+		}
+
+		public void setDateInterval(String dateInterval) {
+			this.dateInterval = dateInterval;
+		}
+		
+		
+		@Transient
+		private List<String> listImages;
+		@Transient
+		private List<String> listVideos;
+		@Transient
+		private List<String> listAudios;
+
+		public List<String> getListImages() {
+			return listImages;
+		}
+
+		public void setListImages(List<String> listImages) {
+			this.listImages = listImages;
+		}
+
+		public List<String> getListVideos() {
+			return listVideos;
+		}
+
+		public void setListVideos(List<String> listVideos) {
+			this.listVideos = listVideos;
+		}
+
+		public List<String> getListAudios() {
+			return listAudios;
+		}
+
+		public void setListAudios(List<String> listAudios) {
+			this.listAudios = listAudios;
+		}
+		
+		@Transient
+		private List<String> listAudiosNames;
+
+		public List<String> getListAudiosNames() {
+			return listAudiosNames;
+		}
+
+		public void setListAudiosNames(List<String> listAudiosNames) {
+			this.listAudiosNames = listAudiosNames;
+		}	
+		
+		@Transient
+		private int liked;
+
+		public int getLiked() {
+			return liked;
+		}
+
+		public void setLiked(int liked) {
+			this.liked = liked;
+		}
+		
 
 }

@@ -49,12 +49,20 @@
     <url-pattern>/RegisterUser/</url-pattern>
   </servlet-mapping>
   <servlet>
-    <servlet-name>PostCreation</servlet-name>
-    <servlet-class>Servlets.PostCreation</servlet-class>
+    <servlet-name>PostHandle</servlet-name>
+    <servlet-class>Servlets.PostHandle</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>PostCreation</servlet-name>
-    <url-pattern>/PostCreation/</url-pattern>
+    <servlet-name>PostHandle</servlet-name>
+    <url-pattern>/PostHandle/</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>CommentCreation</servlet-name>
+    <servlet-class>Servlets.CommentCreation</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>CommentCreation</servlet-name>
+    <url-pattern>/CommentCreation/</url-pattern>
   </servlet-mapping>
   <servlet>
     <servlet-name>Network</servlet-name>
@@ -71,6 +79,78 @@
   <servlet-mapping>
     <servlet-name>Logout</servlet-name>
     <url-pattern>/Logout/</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>Messaging</servlet-name>
+    <servlet-class>Servlets.Messaging</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Messaging</servlet-name>
+    <url-pattern>/Messaging/</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>Settings</servlet-name>
+    <servlet-class>Servlets.Settings</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Settings</servlet-name>
+    <url-pattern>/Settings/</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>Profile</servlet-name>
+    <servlet-class>Servlets.Profile</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Profile</servlet-name>
+    <url-pattern>/Profile/</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>EditProfile</servlet-name>
+    <servlet-class>Servlets.EditProfile</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>EditProfile</servlet-name>
+    <url-pattern>/EditProfile/</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>PublicProfile</servlet-name>
+    <servlet-class>Servlets.PublicProfile</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PublicProfile</servlet-name>
+    <url-pattern>/PublicProfile/</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>PrivateProfile</servlet-name>
+    <servlet-class>Servlets.PrivateProfile</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PrivateProfile</servlet-name>
+    <url-pattern>/PrivateProfile/</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>PublicNetwork</servlet-name>
+    <servlet-class>Servlets.PublicNetwork</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PublicNetwork</servlet-name>
+    <url-pattern>/PublicNetwork/</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>ListUsers</servlet-name>
+    <servlet-class>Servlets.ListUsers</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ListUsers</servlet-name>
+    <url-pattern>/ListUsers/</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <servlet-name>Notifications</servlet-name>
+    <servlet-class>Servlets.Notifications</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Notifications</servlet-name>
+    <url-pattern>/Notifications/</url-pattern>
   </servlet-mapping>
   <context-param>
     <param-name>tempfile.dir</param-name>

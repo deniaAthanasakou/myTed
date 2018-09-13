@@ -1,6 +1,4 @@
-.profile {
-    background-color: gray; /* Add an active/current color for nav bar */
-}
+
 
 
 .container{
@@ -111,6 +109,38 @@
 	padding: 10px;
 	margin-top: 50px;
 	border-radius: 5px;
+}
+
+.chat{
+	float:right;
+	margin-bottom:30px;
+}
+
+.chat-button{
+	width: 130px;
+}
+
+.pending-button{
+	
+}
+
+.networkDiv{
+	float: left;
+	margin-bottom:30px;
+	font-size: large;
+}
+
+.reject-button{
+	float:left;
+}
+
+.accept-button{
+	margin-left:20px;
+	float:right;
+}
+
+.deleteFriend{
+	margin-right: 50px;
 }
 
 

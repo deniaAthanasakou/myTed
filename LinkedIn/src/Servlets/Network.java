@@ -11,8 +11,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.bouncycastle.crypto.tls.ConnectionEnd;
+
 import JavaFiles.AESCrypt;
 import JavaFiles.VariousFunctions;
+import database.dao.connection.ConnectionDAOImpl;
+import database.dao.connection.ConnectionDAO;
 import database.dao.user.UserDAO;
 import database.dao.user.UserDAOImpl;
 import database.entities.User;
@@ -39,13 +43,12 @@ public class Network extends HttpServlet {
 		// TODO Auto-generated method stub
 		
 		//show connnections
-		System.out.println("again in get");
+		System.out.println("again in get network");
 		
 		String displayPage="/jsp_files/network.jsp";
 		request.setAttribute("redirect", "StopLoop");	
-		
 			
-		UserDAO dao = new UserDAOImpl(true);
+		ConnectionDAO dao = new ConnectionDAOImpl(true);
 		int user_id=Integer.valueOf((String) request.getSession().getAttribute("id"));
 		List<User> ulist = dao.getConnections(user_id);
 		System.out.println("id is "+ user_id);
@@ -70,9 +73,21 @@ public class Network extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		//show search results
+	
 		
-		System.out.println(" in post");
-		UserDAO dao = new UserDAOImpl(true);
+		System.out.println(" in post network");
+		
+	/*	if(request.getParameter("searchIt") != null) {
+			System.out.println("searchIt is null");
+			//request.setAttribute("fromPrivateProfilePost", "null");
+			
+			doGet(request, response);
+			return;
+		}*/
+		
+		
+		
+		ConnectionDAO dao = new ConnectionDAOImpl(true);
 		
 		if (request.getParameter("connect") != null) {
 			int user_id1=Integer.valueOf((String) request.getSession().getAttribute("id"));
@@ -84,7 +99,7 @@ public class Network extends HttpServlet {
             return;
 		}
 		
-		
+		request.setAttribute("fromPrivateProfilePost", "null");
 		
 		String search = request.getParameter("search");
 		String displayPage="/jsp_files/network.jsp";
@@ -98,7 +113,7 @@ public class Network extends HttpServlet {
 		if(vf.isBlank(search)) {
 
 			request.setAttribute("getUsers", "usersFromSearch");
-			request.setAttribute("users", dao.listWithConnectedField(Integer.valueOf((String) request.getSession().getAttribute("id"))));	
+			request.setAttribute("users", dao.listWithConnectedPendingField(Integer.valueOf((String) request.getSession().getAttribute("id"))));	//getAllUsers with connected or pending field
 			
 			RequestDispatcher view = request.getRequestDispatcher(displayPage);
 		    view.forward(request, response);
@@ -115,8 +130,8 @@ public class Network extends HttpServlet {
 		
 		if(splitStr.length==1) {
 			System.out.println("one item");
-			List<User> users1= dao.searchByName(splitStr[0]);
-			List<User> users2= dao.searchBySurname(splitStr[0]);
+			List<User> users1= dao.searchByName(splitStr[0],Integer.valueOf((String) request.getSession().getAttribute("id")));
+			List<User> users2= dao.searchBySurname(splitStr[0],Integer.valueOf((String) request.getSession().getAttribute("id")));
 			users = new ArrayList<>();
 			users.addAll(users1);
 			users.addAll(users2);
@@ -125,8 +140,8 @@ public class Network extends HttpServlet {
 			
 			System.out.println("two items");
 			
-			List<User> users1= dao.searchByNameAndSurname(splitStr[0], splitStr[1]);
-			List<User> users2= dao.searchByNameAndSurname(splitStr[1], splitStr[0]);
+			List<User> users1= dao.searchByNameAndSurname(splitStr[0], splitStr[1],Integer.valueOf((String) request.getSession().getAttribute("id")));
+			List<User> users2= dao.searchByNameAndSurname(splitStr[1], splitStr[0],Integer.valueOf((String) request.getSession().getAttribute("id")));
 			users = new ArrayList<>();
 			users.addAll(users1);
 			users.addAll(users2);

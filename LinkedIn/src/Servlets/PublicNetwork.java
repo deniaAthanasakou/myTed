@@ -17,16 +17,16 @@ import database.dao.user.UserDAOImpl;
 import database.entities.User;
 
 /**
- * Servlet implementation class Messaging
+ * Servlet implementation class PublicNetwork
  */
-@WebServlet("/Messaging")
-public class Messaging extends HttpServlet {
+@WebServlet("/PublicNetwork")
+public class PublicNetwork extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public Messaging() {
+    public PublicNetwork() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -36,31 +36,26 @@ public class Messaging extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		
-		//show last conversation
-		
+		//show connnections
 		System.out.println("again in get");
 		
-		String displayPage="/jsp_files/Messaging.jsp";
+		String displayPage="/jsp_files/publicNetwork.jsp";
 		request.setAttribute("redirect", "StopLoop");	
 		
 			
 		ConnectionDAO dao = new ConnectionDAOImpl(true);
-		int user_id=Integer.valueOf((String) request.getSession().getAttribute("id"));
-		List<User> ulist = dao.getConnections(user_id);		//get all connected users
+		int user_id=Integer.valueOf((String) request.getParameter("id"));
+		List<User> ulist = dao.getConnections(user_id);
+		
+		//check for connections with logged in user
+		ulist= dao.existingListWithConnectedField(Integer.valueOf((String) request.getSession().getAttribute("id")), ulist);
+
 		System.out.println("id is "+ user_id);
 		request.setAttribute("users", ulist);
-		
-		if(ulist==null || ulist.size()==0) {
-			request.setAttribute("getUsers", "noFriends");
-		}
-		else {
-			request.setAttribute("getUsers", "friends");
-		}
-        
-		 RequestDispatcher view = request.getRequestDispatcher(displayPage);
-	     view.forward(request, response);
-		
+
+	        
+		RequestDispatcher view = request.getRequestDispatcher(displayPage);
+	    view.forward(request, response);
 	}
 
 	/**

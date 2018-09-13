@@ -3,13 +3,8 @@
 <html>
 	<head>
 		<!-- custom -->
-		
-		
-		
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/css_files/main_css.css" type="text/css">
 		<link rel="stylesheet" href="${pageContext.request.contextPath}/css_files/welcome_page.css" type="text/css">
-		
-		
 		<!-- Latest compiled and minified CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 		<!-- jQuery library -->
@@ -25,7 +20,7 @@
 		
 	<div class="header">
 		<div class="logoContainer">
-			<a href="./WelcomePage.jsp" class="logo"><img src="${pageContext.request.contextPath}/images/logo.png" class="logo"/></a>
+			<a href="${pageContext.request.contextPath}/WelcomePage.jsp" class="logo"><img src="${pageContext.request.contextPath}/images/logo.png" class="logo"/></a>
 		</div>
 	</div> 
 	
@@ -63,7 +58,6 @@
 							</div>
 							<div id="signup" class="tab-pane fade">
 								<h3>Sign Up</h3>
-								<!--  -->
 								<form role="Form" method="POST" action="${pageContext.request.contextPath}/RegisterUser" accept-charset="UTF-8" enctype="multipart/form-data">
 									<div class="form-group">
 										<input type="text" name="email" placeholder="Email..." class="form-control" required>
@@ -85,17 +79,17 @@
 									</div>
 								    <div class="form-group">
 								        <label> Upload Image</label>
-								        <div class="input-group">
+								        <div class="input-group browse">
 								            <span class="input-group-btn">
 								                <span class="btn btn-default btn-file">
 								                    Browse… <input type="file" id="imgInp" name ="imgInp" onchange="readURL(this);"/>
 								                </span>
 								            </span>
-								            <input type="text" class="form-control" readonly>
+								            
 								        </div>
 								        <div id="uploadedImageDiv">
 								         	<img id="uploadedImage" />
-								         	<input type="button" value="Remove" onclick="javascript: removeImage();"/>
+								         	<input type="button" value="Remove" onclick="javascript: removeImage();" class="remove"/>
 								        </div>
 								    </div>
 									<div class="form-group" style="padding-top:20px;">
